@@ -1,0 +1,32 @@
+name: Auto Update Rosstat Data
+on:
+  schedule:
+    - cron: '0 10 * * 4' # Каждый четверг в 10:00 UTC
+  workflow_dispatch: # Кнопка для ручного запуска
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+          
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests pandas openpyxl
+          
+      - name: Run Parser
+        run: python parser.py
+        
+      - name: Commit and Push changes
+        run: |
+          git config --global user.name 'GitHub Action'
+          git config --global user.email 'action@github.com'
+          git add data.json
+          git commit -m "Auto-update data" || echo "No changes"
+          git push
