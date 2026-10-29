@@ -3,7 +3,8 @@ on:
   schedule:
     - cron: '0 10 * * 4' # Каждый четверг в 10:00 UTC
   workflow_dispatch: # Кнопка для ручного запуска
-
+permissions:
+  contents: write
 jobs:
   build:
     runs-on: ubuntu-latest
